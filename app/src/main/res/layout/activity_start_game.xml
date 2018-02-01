@@ -1,0 +1,56 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#0099cc">
+
+    <LinearLayout
+        android:id="@+id/id_start_game_frame"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fitsSystemWindows="true"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <Button
+            android:id="@+id/id_hdlm"
+            android:layout_width="@dimen/button_width"
+            android:layout_height="@dimen/button_height"
+            android:layout_marginTop="@dimen/button_margin"
+            android:background="@drawable/btn_shape"
+            android:text="@string/hdlm"
+            android:textSize="30sp" />
+        <Button
+            android:id="@+id/id_ggzj"
+            android:layout_width="@dimen/button_width"
+            android:layout_height="@dimen/button_height"
+            android:layout_marginTop="@dimen/button_margin"
+            android:background="@drawable/btn_shape"
+            android:text="@string/qgwg"
+            android:textSize="30sp"/>
+        <Button
+            android:id="@+id/id_sxbt"
+            android:layout_width="@dimen/button_width"
+            android:layout_height="@dimen/button_height"
+            android:layout_marginTop="@dimen/button_margin"
+            android:background="@drawable/btn_shape"
+            android:text="@string/sxbt"
+            android:textSize="30sp"/>
+        <Button
+            android:id="@+id/id_jzzc"
+            android:layout_width="@dimen/button_width"
+            android:layout_height="@dimen/button_height"
+            android:layout_marginTop="@dimen/button_margin"
+            android:background="@drawable/btn_shape"
+            android:text="@string/jzzc"
+            android:textSize="30sp"/>
+        <Button
+            android:id="@+id/id_xycc"
+            android:layout_width="@dimen/button_width"
+            android:layout_height="@dimen/button_height"
+            android:layout_marginTop="@dimen/button_margin"
+            android:background="@drawable/btn_shape"
+            android:text="@string/xycc"
+            android:textSize="30sp"/>
+        </LinearLayout>
+
+</FrameLayout>

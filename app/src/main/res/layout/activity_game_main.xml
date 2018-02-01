@@ -1,0 +1,121 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/id_game_main_frame"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#0099cc">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:foregroundGravity="center_horizontal">
+
+        <ImageView
+            android:id="@+id/id_game_bg"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@mipmap/background"/>
+        <ImageView
+            android:id="@+id/id_caocao"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="@dimen/score_margin"/>
+        <ImageView
+            android:id="@+id/id_zhangfei"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="@dimen/score_margin"/>
+        <ImageView
+            android:id="@+id/id_machao"
+            android:layout_width="@dimen/score_width"
+            android:layout_height="@dimen/score_height"
+            android:padding="@dimen/score_margin"/>
+        <ImageView
+            android:id="@+id/id_huangzhong"
+            android:layout_width="@dimen/score_width"
+            android:layout_height="@dimen/score_height"
+            android:padding="@dimen/score_margin" />
+        <ImageView
+            android:id="@+id/id_guanyu"
+            android:layout_width="@dimen/score_width"
+            android:layout_height="@dimen/score_height"
+            android:padding="@dimen/score_margin" />
+        <ImageView
+            android:id="@+id/id_zhaoyun"
+            android:layout_width="@dimen/score_width"
+            android:layout_height="@dimen/score_height"
+            android:padding="@dimen/score_margin"/>
+        <ImageView
+            android:id="@+id/id_zu_1"
+            android:layout_width="@dimen/score_width"
+            android:layout_height="@dimen/score_height"
+            android:padding="@dimen/score_margin" />
+        <ImageView
+            android:id="@+id/id_zu_2"
+            android:layout_width="@dimen/score_width"
+            android:layout_height="@dimen/score_height"
+            android:padding="@dimen/score_margin" />
+        <ImageView
+            android:id="@+id/id_zu_3"
+            android:layout_width="@dimen/score_width"
+            android:layout_height="@dimen/score_height"
+            android:padding="@dimen/score_margin" />
+        <ImageView
+            android:id="@+id/id_zu_4"
+            android:layout_width="@dimen/score_width"
+            android:layout_height="@dimen/score_height"
+            android:padding="@dimen/score_margin" />
+
+        <LinearLayout
+            android:id="@+id/id_score"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/score_height"
+            android:layout_above="@+id/id_button_group"
+            android:gravity="center">
+            <ImageView
+                android:id="@+id/id_score_thousand_place"
+                android:layout_width="@dimen/score_width"
+                android:layout_height="@dimen/score_height"
+                android:layout_margin="@dimen/score_margin"
+                android:visibility="gone"/>
+            <ImageView
+                android:id="@+id/id_score_hundred_place"
+                android:layout_width="@dimen/score_width"
+                android:layout_height="@dimen/score_height"
+                android:layout_margin="@dimen/score_margin"
+                android:visibility="gone"/>
+            <ImageView
+                android:id="@+id/id_score_decade_place"
+                android:layout_width="@dimen/score_width"
+                android:layout_height="@dimen/score_height"
+                android:layout_margin="@dimen/score_margin"
+                android:visibility="gone"/>
+            <ImageView
+                android:id="@+id/id_score_unit_place"
+                android:layout_width="@dimen/score_width"
+                android:layout_height="@dimen/score_height"
+                android:layout_margin="@dimen/score_margin" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/id_button_group"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/button_height"
+            android:orientation="horizontal"
+            android:gravity="center_horizontal"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="@dimen/icon_height">
+            <Button
+                android:id="@+id/id_button_replay"
+                android:layout_width="160dp"
+                android:layout_height="60dp"
+                android:background="@mipmap/replay"/>
+            <Button
+                android:id="@+id/id_button_back"
+                android:layout_width="160dp"
+                android:layout_height="60dp"
+                android:layout_marginLeft="@dimen/icon_width"
+                android:background="@mipmap/back"/>
+        </LinearLayout>
+    </RelativeLayout>
+
+</RelativeLayout>
