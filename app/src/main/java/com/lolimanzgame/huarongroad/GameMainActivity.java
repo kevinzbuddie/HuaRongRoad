@@ -34,32 +34,20 @@ import static android.view.ViewGroup.*;
  */
 public class GameMainActivity extends Activity
 {
-    //private final static int mResolution = 1;
-
     private MediaPlayer mPlayer;
     private SoundPool mSound;
     private HashMap<Integer, Integer> mSoundPoolMap;
 
-    private boolean mMove = false;
-
-    WindowManager wm;
-    int winWidth;
-    int windowHeight;
+    private int winWidth;
 
     private ImageView[] mScore = new ImageView[4];
-    int score = 0;
+    private int score = 0;
     private ImageView[] blkViews = new ImageView[11];
     private Block blocks[] = new Block[11];
-    int set_id;
-    int[][] layout = new int[11][3];
-    int[][] moveable_layout=new int[7][6];
 
-    int block_id;
-    int x0;
-    int y0;
-
-    private Button mReplayButton;
-    private Button mBackButton;
+    private int set_id;
+    private int[][] layout = new int[11][3];
+    private int[][] move_able = new int[7][6];
 
     GestureDetector mGestureDetector;
 
@@ -85,16 +73,14 @@ public class GameMainActivity extends Activity
 
         View mGameMainFrame = findViewById(R.id.id_game_main_frame);
 
-        wm = this.getWindowManager();
+        WindowManager wm = this.getWindowManager();
         winWidth = wm.getDefaultDisplay().getWidth();
-        windowHeight = wm.getDefaultDisplay().getHeight();
 
         Intent intent = getIntent();
         set_id = Integer.valueOf(intent.getExtras().getString("set_id"));
 
         //initialize the all image views
-        for (int i = GameConfigurationsClass.CAOCAO; i<=GameConfigurationsClass.ZU_4; i++)
-        {
+        for (int i = GameConfigurationsClass.CAOCAO; i<=GameConfigurationsClass.ZU_4; i++) {
             blkViews[i] = findViewById(GameConfigurationsClass.block_layout_id_table[i]);
         }
 
@@ -107,8 +93,8 @@ public class GameMainActivity extends Activity
         mScore[3].setImageResource(R.mipmap.n0);
 
         //Initialize the main game animation
-        mReplayButton = findViewById(R.id.id_button_replay);
-        mBackButton = findViewById(R.id.id_button_back);
+        Button mReplayButton = findViewById(R.id.id_button_replay);
+        Button mBackButton = findViewById(R.id.id_button_back);
 
         //initialize layout
         initialize_game_layout(set_id);
@@ -122,20 +108,22 @@ public class GameMainActivity extends Activity
             @Override
             public boolean onTouch(View v, MotionEvent event)
             {
+                mGestureDetector.onTouchEvent(event);
+
                 switch (event.getAction())
                 {
                     case MotionEvent.ACTION_DOWN:
-                        Log.d("action down...","");
+                        Log.d("action down...","action down...");
                         break;
+
                     case MotionEvent.ACTION_MOVE:
-                        Log.d("action move...","");
+                        Log.d("action move...","action move...");
                         break;
+
                     case MotionEvent.ACTION_UP:
-                        Log.d("action up...","");
+                        Log.d("action up...","action up...");
                         break;
                 }
-
-                mGestureDetector.onTouchEvent(event);
                 return true;
             }
         });
@@ -171,9 +159,9 @@ public class GameMainActivity extends Activity
         //initialize the move-able steps.
         for (int row=0;row<7;row++) {
             for (int col=0;col<6;col++){
-                moveable_layout[row][col] = 0;
+                move_able[row][col] = 0;
                 if (row==0||row==6||col==0||col==5){
-                    moveable_layout[row][col] = -1;
+                    move_able[row][col] = -1;
                 }
             }
         }
@@ -188,19 +176,19 @@ public class GameMainActivity extends Activity
         //initialize all blocks objects
         for (int blk_id = GameConfigurationsClass.CAOCAO; blk_id <= GameConfigurationsClass.ZU_4; blk_id++) {
 
-            int blkRow = layout[blk_id][0];
-            int blkCol = layout[blk_id][1];
+            int row = layout[blk_id][0];
+            int col = layout[blk_id][1];
             boolean isRotated = layout[blk_id][2] == 0 ? false : true;
             int blkWidth = isRotated?blkShape[blk_id][1]:blkShape[blk_id][0];
             int blkHeight = isRotated?blkShape[blk_id][0]:blkShape[blk_id][1];
 
             //produce all blocks
-            blocks[blk_id] = new Block(blk_id, blkRow, blkCol, isRotated);
+            blocks[blk_id] = new Block(blk_id, row, col, isRotated);
 
-            moveable_layout[ blkRow ][ blkCol ] = blk_id;
-            moveable_layout[ blkRow + blkHeight - 1][ blkCol ] = blk_id;
-            moveable_layout[ blkRow ][ blkCol + blkWidth - 1] = blk_id;
-            moveable_layout[ blkRow + blkHeight - 1][ blkCol + blkWidth - 1] = blk_id;
+            move_able[row][col] = blk_id;
+            move_able[row+blkHeight- 1][col] = blk_id;
+            move_able[row][col+blkWidth- 1] = blk_id;
+            move_able[row+blkHeight- 1][col+blkWidth- 1] = blk_id;
         }
 
         //initialize all block image view X,Y,W,H
@@ -341,8 +329,8 @@ public class GameMainActivity extends Activity
         int fromY=blocks[id].getBlkCoord(winWidth).y;
         int DeltaY=0;
 
-        int blkRow = layout[id][0];
-        int blkCol = layout[id][1];
+        int row = layout[id][0];
+        int col = layout[id][1];
         boolean isRotated = layout[id][2] == 0 ? false : true;
         int blkWidth = isRotated?blkShape[id][1]:blkShape[id][0];
         int blkHeight = isRotated?blkShape[id][0]:blkShape[id][1];
@@ -351,11 +339,11 @@ public class GameMainActivity extends Activity
             case RIGHT:
                 DeltaX = (blocks[GameConfigurationsClass.ZU_1].getBlkCoord(winWidth).width)*steps;
 
-                moveable_layout[ blkRow ][ blkCol + blkWidth + steps - 1 ] = id;
-                moveable_layout[ blkRow + blkHeight - 1 ][ blkCol + blkWidth + steps - 1 ] = id;
+                move_able[row][col+blkWidth+steps-1] = id;
+                move_able[row+blkHeight-1][col+blkWidth+steps-1] = id;
 
-                moveable_layout[ blkRow ][ blkCol ] = 0;
-                moveable_layout[ blkRow + blkHeight - 1 ][ blkCol ] = 0;
+                move_able[row][col] = 0;
+                move_able[row+blkHeight-1][col] = 0;
 
                 layout[id][1] = layout[id][1] + steps;
                 blocks[id].mBlkPos.mCol = blocks[id].mBlkPos.mCol + steps;
@@ -363,11 +351,11 @@ public class GameMainActivity extends Activity
 
             case LEFT:
                 DeltaX = 0 - (blocks[GameConfigurationsClass.ZU_1].getBlkCoord(winWidth).width)*steps;
-                moveable_layout[ blkRow ][ blkCol - steps ] = id;
-                moveable_layout[ blkRow + blkHeight - 1 ][ blkCol - steps ] = id;
+                move_able[row][col-steps] = id;
+                move_able[row+blkHeight-1][col-steps] = id;
 
-                moveable_layout[ blkRow ][ blkCol + blkWidth - 1 ] = 0;
-                moveable_layout[ blkRow + blkHeight - 1 ][ blkCol + blkWidth - 1 ] = 0;
+                move_able[row][col+blkWidth-1] = 0;
+                move_able[row+blkHeight-1][col+blkWidth-1] = 0;
 
                 layout[id][1] = layout[id][1] - steps;
                 blocks[id].mBlkPos.mCol = blocks[id].mBlkPos.mCol - steps;
@@ -376,11 +364,11 @@ public class GameMainActivity extends Activity
             case DOWN:
                 DeltaY = (blocks[GameConfigurationsClass.ZU_1].getBlkCoord(winWidth).height) * steps;
 
-                moveable_layout[ blkRow + blkHeight + steps - 1 ][ blkCol ] = id;
-                moveable_layout[ blkRow + blkHeight + steps - 1 ][ blkCol + blkWidth - 1] = id;
+                move_able[row+blkHeight+steps-1][col] = id;
+                move_able[row+blkHeight+steps-1][col+blkWidth- 1] = id;
 
-                moveable_layout[ blkRow ][ blkCol ] = 0;
-                moveable_layout[ blkRow ][ blkCol + blkWidth - 1 ] = 0;
+                move_able[row][col] = 0;
+                move_able[row][col+blkWidth-1] = 0;
 
                 layout[id][0] = layout[id][0] + steps;
                 blocks[id].mBlkPos.mRow = blocks[id].mBlkPos.mRow + steps;
@@ -389,11 +377,11 @@ public class GameMainActivity extends Activity
             case UP:
                 DeltaY = 0 - (blocks[GameConfigurationsClass.ZU_1].getBlkCoord(winWidth).height) * steps;
 
-                moveable_layout[ blkRow - steps ][ blkCol ] = id;
-                moveable_layout[ blkRow - steps ][ blkCol + blkWidth - 1 ] = id;
+                move_able[row-steps][col] = id;
+                move_able[row-steps][col+blkWidth-1] = id;
 
-                moveable_layout[ blkRow + blkHeight - 1 ][ blkCol ] = 0;
-                moveable_layout[ blkRow + blkHeight - 1 ][ blkCol + blkWidth - 1 ] = 0;
+                move_able[row+blkHeight-1][col] = 0;
+                move_able[row+blkHeight-1][col+blkWidth-1] = 0;
 
                 layout[id][0] = layout[id][0] - steps;
                 blocks[id].mBlkPos.mRow = blocks[id].mBlkPos.mRow - steps;
@@ -422,7 +410,7 @@ public class GameMainActivity extends Activity
 
         //layout log
         //for (int row=0;row<7;row++) {String s="";for (int col=0;col<6;col++)
-        //{s=s+String.valueOf(moveable_layout[row][col])+" ";}s=s+"\n";Log.d("--->",s);}
+        //{s=s+String.valueOf(move_able[row][col])+" ";}s=s+"\n";Log.d("--->",s);}
     }
 
     // 初始化声音
@@ -514,7 +502,6 @@ public class GameMainActivity extends Activity
         public boolean onSingleTapUp(MotionEvent e) {
             return false;
         }
-
         @Override
         public void onLongPress(MotionEvent e) {
         }
@@ -522,60 +509,53 @@ public class GameMainActivity extends Activity
         @Override
         public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
             Log.d("scroll works... ",
-                    "x0: "+String.valueOf((int)e1.getRawX()) + "  y0: " +
-                            String.valueOf(e1.getRawY()) + "  x1: " +
-                            String.valueOf(e2.getRawX()) + "  y1: " +
-                            String.valueOf(e2.getRawY()) + "  Dx: " +
-                            String.valueOf(distanceX) + "  Dy: " +
-                            String.valueOf(distanceY));
+                        " x0: " + String.valueOf(e1.getRawX()) +
+                            "  y0: " + String.valueOf(e1.getRawY()) +
+                            "  x1: " + String.valueOf(e2.getRawX()) +
+                            "  y1: " + String.valueOf(e2.getRawY()) +
+                            "  Dx: " + String.valueOf(distanceX) +
+                            "  Dy: " + String.valueOf(distanceY));
 
-            x0 = (int) e1.getRawX();
-            y0 = (int) e1.getRawY();
+            int x0 = (int) e1.getRawX();
+            int y0 = (int) e1.getRawY();
             //which block is touched
-            block_id = focus_block(x0, y0);
+            int blk_id = focus_block(x0, y0);
 
-            if (block_id == GameConfigurationsClass.DUMMY) {
-                return false;
-            }
+            if (blk_id == GameConfigurationsClass.DUMMY) { return false; }
 
-            int blkRow = layout[block_id][0];
-            int blkCol = layout[block_id][1];
-            boolean isRotated = layout[block_id][2] == 0 ? false : true;
-            int blkWidth = isRotated?blkShape[block_id][1]:blkShape[block_id][0];
-            int blkHeight = isRotated?blkShape[block_id][0]:blkShape[block_id][1];
+            int row = layout[blk_id][0];
+            int col = layout[blk_id][1];
+            boolean isRotated = layout[blk_id][2] == 0 ? false : true;
+            int blkWidth = isRotated?blkShape[blk_id][1]:blkShape[blk_id][0];
+            int blkHeight = isRotated?blkShape[blk_id][0]:blkShape[blk_id][1];
 
             int delta_x = (int)e2.getRawX() - x0;
             int delta_y = (int)e2.getRawY() - y0;
-            if (!mMove) {
-                if (Math.abs(delta_x) > Math.abs(delta_y)) {
-                    if (delta_x > 60 && delta_x < blocks[GameConfigurationsClass.ZU_1].getBlkCoord(winWidth).width) {
-                        if (moveable_layout[ blkRow ][ blkCol + blkWidth ] == 0 &&
-                                moveable_layout[ blkRow + blkHeight - 1 ][ blkCol + blkWidth ] == 0) {
-                            move_block(block_id, Direction.RIGHT, 1);
-                            //mMove = true;
-                        }
-                    } else if (delta_x < -60) {
-                        if (moveable_layout[ blkRow ][ blkCol - 1 ] == 0 &&
-                                moveable_layout[ blkRow + blkHeight - 1 ][ blkCol - 1 ] == 0) {
-                            move_block(block_id, Direction.LEFT, 1);
-                            //mMove = true;
-                        }
+
+            if (Math.abs(delta_x) > Math.abs(delta_y)) {
+                if (delta_x > 60) {
+                    if (move_able[row][col+blkWidth] == 0 &&
+                            move_able[row+blkHeight-1][col+blkWidth] == 0) {
+                        move_block(blk_id, Direction.RIGHT, 1);
+                    }
+                } else if (delta_x < -60) {
+                    if (move_able[row][col-1] == 0 &&
+                            move_able[row+blkHeight-1][col-1] == 0) {
+                        move_block(blk_id, Direction.LEFT, 1);
                     }
                 }
-                else //Math.abs(delta_x) < Math.abs(delta_y)
-                {
-                    if (delta_y > 60) {
-                        if (moveable_layout[ blkRow + blkHeight ][ blkCol ] == 0 &&
-                                moveable_layout[ blkRow + blkHeight ][ blkCol + blkWidth - 1 ] == 0) {
-                            move_block(block_id, Direction.DOWN, 1);
-                            //mMove = true;
-                        }
-                    } else if (delta_y < -60) {
-                        if (moveable_layout[ blkRow - 1 ][ blkCol ] == 0 &&
-                                moveable_layout[ blkRow - 1 ][ blkCol + blkWidth - 1 ] == 0) {
-                            move_block(block_id, Direction.UP, 1);
-                            //mMove = true;
-                        }
+            }
+            else //Math.abs(delta_x) < Math.abs(delta_y)
+            {
+                if (delta_y > 60) {
+                    if (move_able[row+blkHeight][col] == 0 &&
+                            move_able[row+blkHeight][col+blkWidth-1] == 0) {
+                        move_block(blk_id, Direction.DOWN, 1);
+                    }
+                } else if (delta_y < -60) {
+                    if (move_able[row-1][col] == 0 &&
+                            move_able[row-1][col+blkWidth-1] == 0) {
+                        move_block(blk_id, Direction.UP, 1);
                     }
                 }
             }
@@ -585,34 +565,30 @@ public class GameMainActivity extends Activity
         @Override
         public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
             Log.d("fling works... ",
-                    "x0: "+String.valueOf((int)e1.getRawX()) + "  y0: " +
-                        String.valueOf(e1.getRawY()) + "  x1: " +
-                        String.valueOf(e2.getRawX()) + "  y1: " +
-                        String.valueOf(e2.getRawY()) + "  Vx: " +
-                        String.valueOf(velocityX) + "  Vy: " +
-                        String.valueOf(velocityY));
+                    " x0: " + String.valueOf(e1.getRawX()) +
+                        "  y0: " + String.valueOf(e1.getRawY()) +
+                        "  x1: " + String.valueOf(e2.getRawX()) +
+                        "  y1: " + String.valueOf(e2.getRawY()) +
+                        "  Dx: " + String.valueOf(velocityX) +
+                        "  Dy: " + String.valueOf(velocityY));
             return true;
         }
 
         @Override
         public void onShowPress(MotionEvent e) {
         }
-
         @Override
         public boolean onDown(MotionEvent e) {
             return false;
         }
-
         @Override
         public boolean onDoubleTap(MotionEvent e) {
             return false;
         }
-
         @Override
         public boolean onDoubleTapEvent(MotionEvent e) {
             return false;
         }
-
         @Override
         public boolean onSingleTapConfirmed(MotionEvent e) {
             return false;
